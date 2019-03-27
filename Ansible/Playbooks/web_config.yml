@@ -1,0 +1,20 @@
+---
+  - hosts: nginx
+    become: true
+    tasks:
+      - name: Check if default index file exists
+        stat:
+          path: /var/www/html/index.nginx-debian.html
+        register: default_index
+      - name: Moving existing index.html file
+        command: creates="index.html" mv /var/www/html/index.nginx-debian.html /tmp
+        when: default_index.stat.exists
+      - name: Create new index.html file
+        shell: echo $(hostname -f) > /var/www/html/index.html
+        args:
+          executable: /bin/bash
+      - name: Restart nginx
+        systemd:
+          name: nginx
+          state: reloaded
+          enabled: yes
