@@ -34,3 +34,4 @@ snippets.md
 **/Ansible/*.log
 backend.tf
 push.sh
+**/Files/haproxy.cfg
