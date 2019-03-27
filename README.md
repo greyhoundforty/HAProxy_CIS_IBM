@@ -45,3 +45,5 @@ cp Files/bastion_main.tf.tpl main.tf
 ```
 
 This alternate `main.tf` file creates a version of the Ansible inventory that includes lines for running commands via a Bastion Host.
+
+![](http://cde-assets-2019.s3.us.cloud-object-storage.appdomain.cloud/haproxy_diagram.png)
