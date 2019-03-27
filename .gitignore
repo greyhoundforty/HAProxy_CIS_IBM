@@ -30,8 +30,8 @@ override.tf.json
 snippets.md
 *.log
 
-
+**/Ansible/*.env
 **/Ansible/*.log
 backend.tf
 push.sh
-**/Files/haproxy.cfg
+**/Files/*.cfg
