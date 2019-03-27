@@ -34,6 +34,14 @@ Here is a simple diagram of what we are trying to accomplish:
 ## Prerequisites
  - Terraform [installed](https://learn.hashicorp.com/terraform/getting-started/install.html)
  - The IBM Cloud Terraform provider [installed and configured](https://ibm-cloud.github.io/tf-ibm-docs/index.html#using-terraform-with-the-ibm-cloud-provider)
- - Since our Web servers are going to be private network only you will need either a [Bastion host](https://en.wikipedia.org/wiki/Bastion_host) or existing IBM Cloud server to run the Ansible commands from. 
+ - Since our Web servers are going to be private network only you will need either a [Bastion host](https://blog.scottlowe.org/2015/12/24/running-ansible-through-ssh-bastion-host/) or an existing IBM Cloud server to run the Ansible commands against the web nodes.
 
+### Bastion host
+If you are using a bastion host run the following commands:
 
+```
+mv main.tf{,.bak}
+cp Files/bastion_main.tf.tpl main.tf
+```
+
+This alternate `main.tf` file creates a version of the Ansible inventory that includes lines for running commands via a Bastion Host.

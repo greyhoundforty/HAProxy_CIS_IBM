@@ -94,6 +94,8 @@ web4 ansible_host=web4.ans.${var.domainname} ansible_user=ryan
 
 [nginx:vars]
 host_key_checking = False
+ssh_args = -F  /path/to/ssh.cfg -o ControlMaster=auto -o ControlPersist=30m
+control_path = ~/.ssh/ansible-%%r@%%h:%%p
 
 [local]
 control ansible_connection=local

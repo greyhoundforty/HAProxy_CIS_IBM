@@ -7,10 +7,6 @@ variable ibm_sl_username {}
 # IBM Cloud IaaS User API key (aka SoftLayer User Api Key)
 variable ibm_sl_api_key {}
 
-variable APP_TOKEN {}
-
-variable USER_KEY {}
-
 variable datacenter {
   type = "map"
 
