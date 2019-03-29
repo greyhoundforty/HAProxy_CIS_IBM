@@ -1,6 +1,12 @@
 # Terraform, Ansible and HA load balancing in the IBM Cloud
 
-One of my colleagues, *Hi Neil!*, wrote a guide for how to do a roll your own Cloud Load balancer scenerio with Keepalived and Nginx on the IBM Cloud. I decided to take up the learning exercise/challenge of migrating the manual steps in the guide to an automated deployment model using Terraform and Ansible. I also added in an extra wrinkle which is to add Security groups in to the mix. The [overview](#overview) and [Objectives and Outcomes](#objectives-and-outcomes) sections below are lifted directly from Neils guide [here](https://dsc.cloud/quickshare/HA-NGINX-How-To.pdf).
+## **Major Work in Progress** 
+
+## Overview
+This tutorial will show how to automate the provisioning of infrastructure resources in IBM Cloud by using and Ansible. Terraform will be our deployment tool and Ansible will take on the configuration tasks for our pool of web servers and HA pair of HAProxy instances. 
+
+### Slightly longer version
+One of my colleagues, *Hi Neil!*, wrote a [guide](https://dsc.cloud/quickshare/HA-NGINX-How-To.pdf) for how to do a roll your own HA Load balancer deployment with Keepalived and Nginx on the IBM Cloud. I decided to take up the learning exercise/challenge of migrating the manual steps in the guide to an automated deployment model using Terraform and Ansible. I also added in an extra wrinkle which is to add Security groups in to the mix. 
 
 ## **Major Work in Progress** 
 #### Todo:
@@ -17,16 +23,8 @@ One of my colleagues, *Hi Neil!*, wrote a guide for how to do a roll your own Cl
  - [ ] Need to put placeholder in the `install.yml` file for where you can add your specific SSH keys (and not mine). 
  - [ ] Need to dynamically create Security groups based on Subnets that are provisioned.
 
-## Changes from original guide
-I decided to use HAProxy in place of Nginx for the front-end load balancers, and Nginx in place of Apache for the web servers. Additionally all of the systems are running Ubuntu 16.04 as opposed to Centos like in Neil's guide. 
 
-## Overview
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dolor erat, consectetur ac scelerisque at, porta sit amet ipsum. Vestibulum ac nulla turpis. Fusce fringilla sagittis elit id convallis. Morbi scelerisque diam eget ex interdum, id condimentum justo laoreet. Maecenas molestie malesuada sodales. Nullam convallis sem ac tincidunt malesuada.
-
-## Objectives and Outcomes
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dolor erat, consectetur ac scelerisque at, porta sit amet ipsum. Vestibulum ac nulla turpis. Fusce fringilla sagittis elit id convallis. Morbi scelerisque diam eget ex interdum, id condimentum justo laoreet. Maecenas molestie malesuada sodales. Nullam convallis sem ac tincidunt malesuada. Sed magna mauris, faucibus vel aliquam eu, aliquam quis lorem. Sed quam augue, scelerisque et ante ac, tristique scelerisque turpis. Nullam ac sollicitudin libero. Nulla varius sapien nisi, ac interdum neque hendrerit sed. Fusce eget purus ut sem iaculis consectetur. Aliquam vel sagittis justo. Cras sed eleifend nulla. Aenean aliquet aliquam pulvinar. In eu aliquet diam, ut convallis diam. Aenean massa ligula, pellentesque eu laoreet at, imperdiet in est. 
-
-We will configure the solution to accept HTTP traffic on the public network, proxy the traffic to the private network, and keep all the servers on the same VLAN, for two specific reasons. The first is that it keeps your web servers secure. You can turn the public network interfaces of your web servers off, thus negating any sort of risk you may face from intrusion attempts. The second is that by keeping everything on the same VLAN, you can take advantage of the native intra-VLAN network and avoid any unnecessary network hops, thus lowering latency and increasing performance.
+## Objectives
 Here is a simple diagram of what we are trying to accomplish:
 
 ![Diagram](https://dsc.cloud/quickshare/haproxy_diagram.png)
@@ -34,16 +32,17 @@ Here is a simple diagram of what we are trying to accomplish:
 ## Prerequisites
  - Terraform [installed](https://learn.hashicorp.com/terraform/getting-started/install.html)
  - The IBM Cloud Terraform provider [installed and configured](https://ibm-cloud.github.io/tf-ibm-docs/index.html#using-terraform-with-the-ibm-cloud-provider)
- - Since our Web servers are going to be private network only you will need either a [Bastion host](https://blog.scottlowe.org/2015/12/24/running-ansible-through-ssh-bastion-host/) or an existing IBM Cloud server to run the Ansible commands against the web nodes.
-
+ - Since our Web servers will not have public network interfaces you will need one of the following to successfully run the Ansible commands:
+    - An active [VPN](https://cloud.ibm.com/docs/terraform/ansible?topic=terraform-ansible#setup_vpn) connection to the IBM Cloud. 
+    - A [Bastion host](https://blog.scottlowe.org/2015/12/24/running-ansible-through-ssh-bastion-host/) running on the IBM Cloud. See [Bastion Host](#bastion-host) for additional steps needed. 
+    - An existing IBM Cloud server
+ 
 ### Bastion host
 If you are using a bastion host run the following commands:
 
-```
+```bash
 mv main.tf{,.bak}
 cp Files/bastion_main.tf.tpl main.tf
 ```
 
 This alternate `main.tf` file creates a version of the Ansible inventory that includes lines for running commands via a Bastion Host.
-
-![](http://cde-assets-2019.s3.us.cloud-object-storage.appdomain.cloud/haproxy_diagram.png)

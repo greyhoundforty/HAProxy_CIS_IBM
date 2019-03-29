@@ -30,5 +30,10 @@ ansible_config() {
     terraform apply -auto-approve "ansible.tfplan"
 } &> ${runlog}
 
+fire_trigger() {
+    /usr/local/bin/bash ~/bin/tf-slack-notice.sh 
+}
+
 iaas_provision
 ansible_config
+fire_trigger

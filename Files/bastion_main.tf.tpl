@@ -182,3 +182,10 @@ output "FLOATING_IP_SUBNET_ID" {
   value = "${ibm_subnet.floating_ip_subnet.id}"
 }
 
+resource "null_resource" "" {
+    depends_on = ["ibm_cis_dns_record.floating_ip_record"]
+    provisioner "local-exec" {
+        command = "~/bin/tf-slack-notice"
+        interpreter = ["/usr/local/bin/bash", "-c"]
+    }
+}

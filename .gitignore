@@ -35,3 +35,5 @@ snippets.md
 backend.tf
 push.sh
 **/Files/*.cfg
+*.out
+build.sh
